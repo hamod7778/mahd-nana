@@ -1,0 +1,112 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  image     String?
+  icon      String?
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          String      @id @default(cuid())
+  name        String
+  slug        String      @unique
+  description String
+  price       Float       // السعر بالريال السعودي (SAR)
+  oldPrice    Float?      // السعر السابق قبل الخصم
+  image       String      // الصورة الرئيسية
+  images      String      // صور إضافية كـ JSON String
+  category    Category    @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  categoryId  String
+  stock       Int         @default(10)
+  featured    Boolean     @default(false)
+  badge       String?     // مثل: جديد، الأكثر مبيعاً، خصم
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model ExchangeAccount {
+  id            String   @id @default(cuid())
+  name          String   // اسم شبكة الصرافة (مثل: النجم، العمقي، الكريمي، سويد)
+  accountName   String   // اسم المستفيد
+  accountNumber String   // رقم الحساب أو رقم الهاتف
+  instructions  String?  // ملاحظات التحويل
+  isActive      Boolean  @default(true)
+  logoUrl       String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Order {
+  id                  String      @id @default(cuid())
+  orderCode           String      @unique // رقم الطلب المميز مثل #YMN-84920
+  customerName        String      // اسم العميل
+  customerPhone       String      // رقم الواتساب / الجوال
+  city                String      // المحافظة / المدينة
+  address             String      // العنوان التفصيلي
+  notes               String?     // ملاحظات إضافية
+  exchangeAccountName String      // شركة الصرافة المختارة
+  totalAmount         Float       // المبلغ الإجمالي بالريال السعودي
+  status              String      @default("PENDING") // PENDING, VERIFIED, PREPARING, SHIPPED, DELIVERED, CANCELLED
+  receiptUrl          String?     // رابط أو اسم صورة الإيصال إن وجدت
+  items               OrderItem[]
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId     String
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productId   String?
+  productName String
+  price       Float
+  quantity    Int
+}
+
+model StoreSettings {
+  id               String   @id @default(cuid())
+  storeName        String   @default("متجر بيبي يمن - لمستلزمات المواليد")
+  whatsappNumber   String   @default("967770000000")
+  announcementText String?  @default("🚚 توصيل سريع لكافة المحافظات اليمنية | 💳 الدفع بالتحويل لأي شبكة صرافة (بالريال السعودي)")
+  heroTitle        String?  @default("كل ما يحتاجه طفلك الصغير في مكان واحد 👶✨")
+  heroSubtitle     String?  @default("أرقى المستلزمات والألبسة وغرف المواليد بأجود الخامات وأفضل الأسعار للسوق اليمني")
+  updatedAt        DateTime @updatedAt
+}
+
+model Banner {
+  id        String   @id @default(cuid())
+  title     String
+  subtitle  String?
+  badge     String?
+  image     String
+  linkUrl   String?
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Governorate {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  shippingFee Float    @default(0) // رسوم التوصيل بالريال السعودي (SAR)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+
