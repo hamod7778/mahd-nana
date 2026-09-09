@@ -1,10 +1,14 @@
-import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+export const dynamic = 'force-dynamic';
 
-const prisma = new PrismaClient();
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
+    if (!params?.id) {
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+    }
+
     const body = await req.json();
     const { name, shippingFee, isActive } = body;
 
@@ -26,6 +30,10 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   try {
+    if (!params?.id) {
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+    }
+
     await prisma.governorate.delete({
       where: { id: params.id },
     });

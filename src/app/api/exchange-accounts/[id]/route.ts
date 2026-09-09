@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
@@ -6,6 +8,10 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    if (!params?.id) {
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+    }
+
     const body = await request.json();
     const { name, accountName, accountNumber, instructions, isActive, logoUrl } = body;
 
@@ -32,6 +38,10 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    if (!params?.id) {
+      return NextResponse.json({ error: 'ID is required' }, { status: 400 });
+    }
+
     await prisma.exchangeAccount.delete({
       where: { id: params.id },
     });
