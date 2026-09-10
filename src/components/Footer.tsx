@@ -100,7 +100,7 @@ export default function Footer() {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>© {year} متجر مهد ونعناع لمستلزمات المواليد. جميع الحقوق محفوظة.</p>
           <div className="flex items-center gap-1 text-slate-400">
-            <span>تم التطوير بحب ورعاية للأطفال 👶</span>
+            <span>تم التطوير بحب  👶</span>
           </div>
         </div>
       </div>
