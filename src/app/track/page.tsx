@@ -112,7 +112,7 @@ export default function TrackOrderPage() {
         </div>
         <h1 className="text-2xl sm:text-4xl font-black text-slate-900">خدمة تتبع الطلب 🔍</h1>
         <p className="text-slate-500 text-sm">
-          أدخل رقم الطلب الخاص بك (مثال: <span className="font-mono text-rose-600 font-bold">#YMN-92841</span>) أو رقم الجوال لمشاهدة حالة طلبك مباشرة.
+          أدخل رقم الطلب الخاص بك بالكامل (مثال: <span className="font-mono text-rose-600 font-bold">#YMN-92841</span>) أو رقم الجوال بالكامل لمشاهدة حالة طلبك مباشرة.
         </p>
       </div>
 
@@ -123,7 +123,7 @@ export default function TrackOrderPage() {
             <input
               type="text"
               required
-              placeholder="أدخل رقم الطلب أو رقم الجوال..."
+              placeholder="أدخل رقم الطلب بالكامل أو رقم الجوال..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="w-full bg-slate-50 border border-slate-200 focus:border-rose-500 focus:bg-white text-slate-800 text-base rounded-2xl py-3.5 pr-11 pl-4 outline-none font-bold transition shadow-inner"

@@ -6,22 +6,48 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const query = searchParams.get('query')?.trim();
+    const rawQuery = searchParams.get('query')?.trim() || '';
 
-    if (!query) {
-      return NextResponse.json({ error: 'يرجى إدخال رقم الطلب أو رقم الجوال' }, { status: 400 });
+    if (!rawQuery) {
+      return NextResponse.json({ error: 'يرجى إدخال رقم الطلب الكامل أو رقم الجوال' }, { status: 400 });
     }
 
-    // Clean query: strip # if user entered #YMN-12345
-    const cleanCode = query.replace('#', '').toUpperCase();
+    // Clean input
+    const cleanCode = rawQuery.replace('#', '').trim().toUpperCase();
+    const formattedCode = cleanCode.startsWith('YMN-') ? cleanCode : `YMN-${cleanCode}`;
+
+    // Clean phone (digits only)
+    const digitsOnly = rawQuery.replace(/[^0-9]/g, '');
+
+    // Security & Privacy rule: Require full order code or full phone number (at least 8 digits)
+    const isFullCode = cleanCode.length >= 4;
+    const isFullPhone = digitsOnly.length >= 8;
+
+    if (!isFullCode && !isFullPhone) {
+      return NextResponse.json(
+        { error: 'لحماية خصوصية العملاء، يرجى كتابة كود الطلب بالكامل (مثال: YMN-92841) أو رقم الجوال بالكامل.' },
+        { status: 400 }
+      );
+    }
+
+    const orConditions: any[] = [
+      { orderCode: { equals: cleanCode } },
+      { orderCode: { equals: formattedCode } },
+    ];
+
+    if (isFullPhone) {
+      const localPhoneNoZero = digitsOnly.replace(/^967/, '').replace(/^0+/, '');
+      orConditions.push(
+        { customerPhone: { equals: digitsOnly } },
+        { customerPhone: { equals: `0${localPhoneNoZero}` } },
+        { customerPhone: { equals: `967${localPhoneNoZero}` } },
+        { customerPhone: { equals: localPhoneNoZero } }
+      );
+    }
 
     const orders = await prisma.order.findMany({
       where: {
-        OR: [
-          { orderCode: { equals: cleanCode } },
-          { orderCode: { contains: cleanCode } },
-          { customerPhone: { contains: query } },
-        ],
+        OR: orConditions,
       },
       include: {
         items: true,
@@ -30,7 +56,10 @@ export async function GET(request: Request) {
     });
 
     if (!orders || orders.length === 0) {
-      return NextResponse.json({ error: 'لم يتم العثور على طلب بهذا الرقم أو الجوال' }, { status: 404 });
+      return NextResponse.json(
+        { error: 'لم يتم العثور على طلب بهذه البيانات. يرجى التأكد من كتابة رقم الطلب أو رقم الجوال بالكامل.' },
+        { status: 404 }
+      );
     }
 
     return NextResponse.json(orders);
