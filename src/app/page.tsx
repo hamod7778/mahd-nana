@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from '@/components/ProductCard';
 import ProductQuickViewModal from '@/components/ProductQuickViewModal';
 import HeroSlider from '@/components/HeroSlider';
+import PastelHero3D from '@/components/PastelHero3D';
 import SizeCalculator from '@/components/SizeCalculator';
 import { Product } from '@/context/CartContext';
 import { Sparkles, ShieldCheck, Truck, CreditCard, Heart, ArrowLeft, Search, Baby, Filter, RefreshCw, Compass, Layers, Check, Shirt, Milk, BedDouble, Gamepad2, Gift, Ruler } from 'lucide-react';
@@ -83,6 +84,18 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [heroPointer, setHeroPointer] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  const handleHeroMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+    setHeroPointer({ x, y });
+  };
+
+  const handleHeroMouseLeave = () => {
+    setHeroPointer({ x: 0, y: 0 });
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -132,9 +145,13 @@ export default function HomePage() {
     <div className="space-y-12 pb-16">
       
       {/* 1. HERO BANNER (Salla-inspired soft baby design) */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-rose-100 via-pink-50 to-amber-50 rounded-b-3xl sm:rounded-3xl max-w-7xl mx-auto mt-0 sm:mt-6 p-6 sm:p-12 border border-rose-100/80 shadow-sm">
+      <section
+        onMouseMove={handleHeroMouseMove}
+        onMouseLeave={handleHeroMouseLeave}
+        className="relative overflow-hidden bg-gradient-to-br from-rose-100 via-pink-50 to-amber-50 rounded-b-3xl sm:rounded-3xl max-w-7xl mx-auto mt-0 sm:mt-6 p-6 sm:p-12 border border-rose-100/80 shadow-sm"
+      >
         <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-rose-300/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-64 h-64 bg-amber-300/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 -mb-10 -ml-10 w-64 h-64 bg-sky-200/25 rounded-full blur-3xl" />
 
         <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="space-y-5 text-center md:text-right">
@@ -143,9 +160,13 @@ export default function HomePage() {
               <span>أرقى مستلزمات المواليد في اليمن 🇾🇪</span>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl font-black text-slate-900 leading-tight tracking-tight">
-              كل ما يحتاجه طفلك الصغير في مكان واحد 👶✨
-            </h1>
+            {/* Store Title + Soft Interactive Pastel 3D Object */}
+            <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4">
+              <h1 className="flex-1 text-3xl sm:text-5xl font-black text-slate-900 leading-tight tracking-tight">
+                كل ما يحتاجه طفلك الصغير في مكان واحد 👶✨
+              </h1>
+              <PastelHero3D pointerOffset={heroPointer} />
+            </div>
 
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed max-w-xl mx-auto md:mx-0">
               تسوق تشكيلة واسعة من أطقم الملابس القطنية، أسرة النوم الهزازة، مستلزمات التغذية والعناية، بأعلى جودة وعملة المتجر الريال السعودي مع التوصيل لجميع المحافظات.
