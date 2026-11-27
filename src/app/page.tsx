@@ -4,8 +4,9 @@ import React, { useState, useEffect } from 'react';
 import ProductCard from '@/components/ProductCard';
 import ProductQuickViewModal from '@/components/ProductQuickViewModal';
 import HeroSlider from '@/components/HeroSlider';
+import SizeCalculator from '@/components/SizeCalculator';
 import { Product } from '@/context/CartContext';
-import { Sparkles, ShieldCheck, Truck, CreditCard, Heart, ArrowLeft, Search, Baby, Filter, RefreshCw, Compass, Layers, Check, Shirt, Milk, BedDouble, Gamepad2, Gift } from 'lucide-react';
+import { Sparkles, ShieldCheck, Truck, CreditCard, Heart, ArrowLeft, Search, Baby, Filter, RefreshCw, Compass, Layers, Check, Shirt, Milk, BedDouble, Gamepad2, Gift, Ruler } from 'lucide-react';
 import Link from 'next/link';
 
 interface Category {
@@ -166,6 +167,14 @@ export default function HomePage() {
               >
                 <Compass className="w-5 h-5 text-rose-500" />
                 <span>تتبع طلبك</span>
+              </Link>
+
+              <Link
+                href="/sizes"
+                className="px-5 py-3.5 bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold rounded-2xl shadow-sm border border-amber-200/80 transition flex items-center gap-2 text-sm"
+              >
+                <Ruler className="w-5 h-5 text-amber-600" />
+                <span>حاسبة المقاسات</span>
               </Link>
             </div>
 
@@ -330,6 +339,33 @@ export default function HomePage() {
             ))}
           </div>
         )}
+      </section>
+
+      {/* 3.5. INTERACTIVE INTERNATIONAL SIZE CALCULATOR SECTION */}
+      <section id="size-system-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-extrabold mb-2 border border-amber-200/70">
+              <Ruler className="w-4 h-4" />
+              <span>فكرة جديدة في متجر مهد ونعناع</span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
+              اعرف الطول والعرض العالمي لأي مقاس قبل الطلب 📏✨
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              اكتب المقاس المطلوب مثل <span className="font-bold text-rose-600">0-3</span> لمعرفة أبعاده العالمية بدقة بالسم والإنش
+            </p>
+          </div>
+
+          <Link
+            href="/sizes"
+            className="px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold bg-white text-rose-600 hover:bg-rose-50 border border-rose-200 transition shadow-sm shrink-0"
+          >
+            عرض جدول المقاسات الكامل ↗
+          </Link>
+        </div>
+
+        <SizeCalculator compact initialSizeQuery="0-3" />
       </section>
 
       {/* 4. YEMENI PAYMENT & EXCHANGE INSTRUCTIONS GUIDE */}

@@ -43,6 +43,9 @@ export default function Footer() {
                 <Link href="/" className="hover:text-rose-400 transition">الرئيسية</Link>
               </li>
               <li>
+                <Link href="/sizes" className="hover:text-rose-400 transition">نظام المقاسات العالمية (0-3 وغيرها)</Link>
+              </li>
+              <li>
                 <Link href="/track" className="hover:text-rose-400 transition">تتبع طلبك برقم الطلب</Link>
               </li>
               <li>

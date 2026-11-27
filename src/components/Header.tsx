@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ShoppingBag, Search, Truck, Baby, Compass, Menu, X } from 'lucide-react';
+import { ShoppingBag, Search, Truck, Baby, Compass, Menu, X, Ruler } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 
 export default function Header() {
@@ -72,7 +72,16 @@ export default function Header() {
           </form>
 
           {/* Action Links & Cart */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3">
+            {/* Size System Button */}
+            <Link
+              href="/sizes"
+              className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition border border-amber-200/70"
+            >
+              <Ruler className="w-4 h-4 text-amber-600" />
+              <span>دليل المقاسات</span>
+            </Link>
+
             {/* Order Tracking Button */}
             <Link
               href="/track"
@@ -135,6 +144,14 @@ export default function Header() {
             className="block py-2 px-3 rounded-lg text-slate-700 font-bold hover:bg-rose-50 hover:text-rose-600"
           >
             الرئيسية
+          </Link>
+          <Link
+            href="/sizes"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center gap-2 py-2 px-3 rounded-lg text-amber-700 font-bold bg-amber-50"
+          >
+            <Ruler className="w-4 h-4" />
+            نظام ودليل المقاسات العالمية
           </Link>
           <Link
             href="/track"

@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import { Product, useCart } from '@/context/CartContext';
-import { X, ShoppingBag, Plus, Minus, Check, ShieldCheck, Truck, ChevronRight, ChevronLeft } from 'lucide-react';
+import { X, ShoppingBag, Plus, Minus, Check, ShieldCheck, Truck, ChevronRight, ChevronLeft, Ruler } from 'lucide-react';
 import Link from 'next/link';
+import SizeGuideModal from './SizeGuideModal';
 
 interface ProductQuickViewModalProps {
   product: Product | null;
@@ -15,6 +16,7 @@ export default function ProductQuickViewModal({ product, onClose }: ProductQuick
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
 
   if (!product) return null;
 
@@ -176,20 +178,34 @@ export default function ProductQuickViewModal({ product, onClose }: ProductQuick
                 )}
               </button>
 
-              <div className="text-center">
+              <div className="flex items-center justify-center gap-4">
                 <Link
                   href={`/products/${product.id}`}
                   onClick={onClose}
                   className="text-xs font-bold text-slate-500 hover:text-rose-600 underline"
                 >
-                  عرض صفحة التفاصيل الكاملة للمنتج
+                  عرض صفحة التفاصيل الكاملة
                 </Link>
+                <span className="text-slate-300">|</span>
+                <button
+                  type="button"
+                  onClick={() => setIsSizeGuideOpen(true)}
+                  className="inline-flex items-center gap-1 text-xs font-extrabold text-amber-700 hover:text-rose-600 transition"
+                >
+                  <Ruler className="w-3.5 h-3.5" />
+                  <span>حاسبة المقاسات</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
 
       </div>
+
+      <SizeGuideModal
+        isOpen={isSizeGuideOpen}
+        onClose={() => setIsSizeGuideOpen(false)}
+      />
     </div>
   );
 }

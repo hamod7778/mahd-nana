@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect } from 'react';
 import { Product, useCart } from '@/context/CartContext';
-import { ShoppingBag, Check, Plus, Minus, ShieldCheck, Truck, ArrowRight, Heart, Star, CreditCard, ChevronRight, ChevronLeft } from 'lucide-react';
+import { ShoppingBag, Check, Plus, Minus, ShieldCheck, Truck, ArrowRight, Heart, Star, CreditCard, ChevronRight, ChevronLeft, Ruler } from 'lucide-react';
 import Link from 'next/link';
 import ProductCard from '@/components/ProductCard';
+import SizeGuideModal from '@/components/SizeGuideModal';
 
 export const dynamic = 'force-dynamic';
 
@@ -16,6 +17,7 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
 
   useEffect(() => {
     async function loadProduct() {
@@ -205,17 +207,28 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
             </div>
 
             {/* Binary Availability Status (متوفر / غير متوفر) */}
-            {isAvailable ? (
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 px-3.5 py-2 rounded-xl inline-flex border border-emerald-200/60">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                <span>متوفر بالمخزون</span>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 text-xs font-bold text-rose-700 bg-rose-50 px-3.5 py-2 rounded-xl inline-flex border border-rose-200/60">
-                <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
-                <span>غير متوفر حالياً</span>
-              </div>
-            )}
+            <div className="flex flex-wrap items-center gap-3">
+              {isAvailable ? (
+                <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 bg-emerald-50 px-3.5 py-2 rounded-xl inline-flex border border-emerald-200/60">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                  <span>متوفر بالمخزون</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 text-xs font-bold text-rose-700 bg-rose-50 px-3.5 py-2 rounded-xl inline-flex border border-rose-200/60">
+                  <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                  <span>غير متوفر حالياً</span>
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setIsSizeGuideOpen(true)}
+                className="inline-flex items-center gap-2 text-xs font-extrabold text-amber-800 bg-amber-50 hover:bg-amber-100 px-3.5 py-2 rounded-xl border border-amber-200/80 transition shadow-sm"
+              >
+                <Ruler className="w-4 h-4 text-amber-600" />
+                <span>حاسبة القياسات العالمية (0-3 وغيرها)</span>
+              </button>
+            </div>
           </div>
 
           {/* Action Box */}
@@ -293,6 +306,11 @@ export default function ProductDetailPage({ params }: { params: { id: string } }
           </div>
         </section>
       )}
+
+      <SizeGuideModal
+        isOpen={isSizeGuideOpen}
+        onClose={() => setIsSizeGuideOpen(false)}
+      />
 
     </div>
   );
